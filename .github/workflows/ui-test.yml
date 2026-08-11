@@ -1,0 +1,50 @@
+name: UI Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: {}
+
+jobs:
+  ui-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Upgrade pip and install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r test_assignment_week4/requirements.txt
+          pip install pytest-html
+
+      - name: Install Playwright browsers and system deps
+        run: |
+          python -m playwright install --with-deps
+
+      - name: Run tests (Chromium + Firefox via parametrized fixture)
+        working-directory: test_assignment_week4
+        run: |
+          # run tests in parallel across 2 workers and generate a self-contained HTML report
+          pytest -q -n 2 --html=report.html --self-contained-html
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-report
+          path: test_assignment_week4/report.html
+
+      - name: Upload screenshots (if any)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-screenshots
+          path: test_assignment_week4/screenshots
