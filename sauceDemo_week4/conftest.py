@@ -42,7 +42,7 @@ def page(request, browser_name):
 
     playwright = sync_playwright().start()
     browser_type = getattr(playwright, browser_name)
-    browser = browser_type.launch(headless=headless)
+    browser = browser_type.launch(headless=headless, slow_mo=1000)
     context = browser.new_context()
     page = context.new_page()
 
