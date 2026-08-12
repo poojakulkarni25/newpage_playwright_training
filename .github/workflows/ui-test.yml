@@ -22,19 +22,31 @@ jobs:
 
       - name: Upgrade pip and install Python dependencies
         run: |
+          set -ex
+          echo "=== Python version ==="
+          python --version
+          echo "=== Pip version ==="
+          pip --version
+          echo "=== Installing dependencies from requirements.txt ==="
           python -m pip install --upgrade pip
           pip install -r test_assignment_week4/requirements.txt
           pip install pytest-html
+          echo "=== Installed packages ==="
+          pip list
 
       - name: Install Playwright browsers and system deps
         run: |
+          set -ex
+          echo "=== Installing Playwright browsers ==="
           python -m playwright install --with-deps
 
       - name: Run tests (Chromium + Firefox via parametrized fixture)
         working-directory: test_assignment_week4
         run: |
-          # run tests in parallel across 2 workers and generate a self-contained HTML report
-          pytest -q -n 2 --html=report.html --self-contained-html
+          set -ex
+          echo "=== Running pytest in test_assignment_week4 ==="
+          echo "pytest command: pytest -vv -n 2 --html=report.html --self-contained-html"
+          pytest -vv -n 2 --html=report.html --self-contained-html
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
