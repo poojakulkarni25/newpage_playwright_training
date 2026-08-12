@@ -1,0 +1,54 @@
+name: SauceDemo UI Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: {}
+
+jobs:
+  ui-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        working-directory: sauceDemo_week4
+        run: |
+          set -ex
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-html
+
+      - name: Install Playwright browsers
+        working-directory: sauceDemo_week4
+        run: |
+          set -ex
+          python -m playwright install --with-deps
+
+      - name: Run SauceDemo tests
+        working-directory: sauceDemo_week4
+        run: |
+          set -ex
+          pytest -n 2
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sauceDemo-ui-report
+          path: sauceDemo_week4/report.html
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sauceDemo-ui-screenshots
+          path: sauceDemo_week4/artifacts/screenshots
