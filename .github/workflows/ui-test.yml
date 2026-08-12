@@ -44,9 +44,9 @@ jobs:
         working-directory: test_assignment_week4
         run: |
           set -ex
-          echo "=== Running pytest in test_assignment_week4 ==="
-          echo "pytest command: pytest -vv -n 2 --html=report.html --self-contained-html"
-          pytest -vv -n 2 --html=report.html --self-contained-html
+          echo "=== STEP: Run tests (Chromium + Firefox via parametrized fixture) ==="
+          echo "=== Current command: pytest -vv -n 2 --capture=no --html=report.html --self-contained-html ==="
+          pytest -vv -n 2 --capture=no --html=report.html --self-contained-html
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
