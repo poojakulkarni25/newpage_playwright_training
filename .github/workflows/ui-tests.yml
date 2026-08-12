@@ -2,9 +2,9 @@ name: SauceDemo UI Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, sauceDemo_week4 ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, sauceDemo_week4 ]
   workflow_dispatch: {}
 
 jobs:
